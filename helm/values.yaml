@@ -18,7 +18,7 @@ jobSchedule: "0 0 * * *"
 gcpServiceAccount: someone@someproject.iam.gserviceaccount.com
 
 # timezone to check
-timezone: Asia/Tokyo"
+timezone: Asia/Tokyo
 # Spreadsheet ID where subscription information is
 spreadsheetId: 1234_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm
 # Sheet Name where monthly subscription information is
