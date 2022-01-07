@@ -1,0 +1,27 @@
+image:
+  repository: asia.gcr.io/neigepluie/household-accounts-subscriptions
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+resources:
+  requests:
+    cpu: 200m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+# when start job
+jobSchedule: "0 0 * * *"
+
+# GCP Service Account to read the household accounts Spreadsheet
+gcpServiceAccount: someone@someproject.iam.gserviceaccount.com
+
+# timezone to check
+timezone: Asia/Tokyo"
+# Spreadsheet ID where subscription information is
+spreadsheetId: 1234_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm
+# Sheet Name where monthly subscription information is
+sheetName: Monthly_Subscription
+# URL to POST account information
+householdAccountsFormUrl: https://example.com

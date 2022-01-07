@@ -1,0 +1,29 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: household-accounts-subscriptions
+spec:
+  schedule: {{ .Values.jobSchedule | quote }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: household-accounts-subscriptions
+          containers:
+          - name: household-accounts-subscriptions
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            resources:
+              {{- toYaml .Values.resources | nindent 14 }}
+            env:
+            - name: TZ
+              value: {{ .Values.timezone }}
+            - name: SPREADSHEET_ID
+              value: {{ .Values.spreadsheetId }}
+            - name: SHEET_NAME
+              value: {{ .Values.sheetName }}
+            - name: HOUSEHOLD_ACCOUNTS_FORM_URL
+              value: {{ .Values.householdAccountsFormUrl }}
+          restartPolicy: OnFailure
