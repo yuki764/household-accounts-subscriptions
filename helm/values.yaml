@@ -19,9 +19,9 @@ gcpServiceAccount: someone@someproject.iam.gserviceaccount.com
 
 # timezone to check
 timezone: Asia/Tokyo
-# Spreadsheet ID where subscription information is
+# Spreadsheet ID where subscriptions information is
 spreadsheetId: 1234_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm
-# Sheet Name where monthly subscription information is
-sheetName: Monthly_Subscription
+# Sheet Name where subscriptions information is
+sheetName: Subscription
 # URL to POST account information
 householdAccountsFormUrl: https://example.com
