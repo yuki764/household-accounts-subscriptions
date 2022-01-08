@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"time"
 
 	"google.golang.org/api/sheets/v4"
@@ -32,7 +31,7 @@ func main() {
 		log.Fatal(err)
 	}
 	sheetRange := "A:E"
-	subsResp, err := svc.Spreadsheets.Values.Get(spreadsheetId, sheetName+"!"+sheetRange).Do()
+	subsResp, err := svc.Spreadsheets.Values.Get(spreadsheetId, sheetName+"!"+sheetRange).ValueRenderOption("UNFORMATTED_VALUE").Do()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,24 +43,43 @@ func main() {
 		if i == 0 {
 			continue
 		}
-		// today is payment date
-		if v[1] == strconv.Itoa(t.Day()) {
+		// today is payment day
+		if payDay, ok := v[1].(float64); ok && int(payDay) == t.Day() {
 			// monthly subscription ("*" is input) OR this month is payment month
-			if v[0] == "*" || v[0] == strconv.Itoa(int(t.Month())) {
-				// send account information
-				accountData := url.Values{}
-				accountData.Add("date", t.Format("2006-01-02"))
-				accountData.Add("category", v[2].(string))
-				accountData.Add("price", v[3].(string))
-				accountData.Add("item", v[4].(string))
-				accountResp, err := http.PostForm(householdAccountsFormUrl, accountData)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				fmt.Println(accountResp.Status + " for " + v[4].(string))
-				nothingToUpdate = false
+			if payMonth, ok := v[0].(string); ok && payMonth == "*" {
+				// go to "send account information"
+			} else if payMonth, ok := v[0].(float64); ok && int(payMonth) == int(t.Month()) {
+				// go to "send account information"
+			} else {
+				continue
 			}
+
+			// send account information
+			accountData := url.Values{}
+			accountData.Add("date", t.Format("2006-01-02"))
+			if accountCategory, ok := v[2].(string); ok {
+				accountData.Add("category", accountCategory)
+			} else {
+				log.Fatalln("format error in `category` column")
+			}
+			if accountPrice, ok := v[3].(float64); ok {
+				accountData.Add("price", fmt.Sprintf("%.0f", accountPrice))
+			} else {
+				log.Fatalln("format error in `price` column")
+			}
+			if accountItem, ok := v[4].(string); ok {
+				accountData.Add("item", accountItem)
+			} else {
+				log.Fatalln("format error in `item` column")
+			}
+			// run query
+			accountResp, err := http.PostForm(householdAccountsFormUrl, accountData)
+			if err != nil {
+				log.Fatal(err)
+			}
+			nothingToUpdate = false
+			// print query result to stdout
+			fmt.Println(accountResp.Status + " for " + v[4].(string))
 		}
 	}
 
