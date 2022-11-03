@@ -1,5 +1,5 @@
 image:
-  repository: asia.gcr.io/neigepluie/household-accounts-subscriptions
+  name: gcr.io/neigepluie/household-accounts-subscriptions
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
