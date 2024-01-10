@@ -1,5 +1,5 @@
 image:
-  name: gcr.io/neigepluie/household-accounts-subscriptions
+  name: asia-docker.pkg.dev/project/repo/household-accounts-subscriptions
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
